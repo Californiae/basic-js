@@ -5,25 +5,40 @@ const { NotImplementedError } = require('../extensions/index.js');
  * 
  */
 const chainMaker = {
+  chain: [],
+
+  // Returns the length of the chain
   getLength() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+    return this.chain.length;
   },
-  addLink(/* value */) {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+
+  // Adds a link to the chain
+  addLink(value) {
+    this.chain.push(`( ${value} )`);
+    return this; // Returns the chainMaker object for chaining
   },
-  removeLink(/* position */) {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+
+  // Removes the link at the specified position
+  removeLink(position) {
+    if (position < 1 || position > this.chain.length || typeof position !== 'number') {
+      this.chain = []; // Reset the chain if the position is invalid
+      throw new Error("You can't remove incorrect link!");
+    }
+    this.chain.splice(position - 1, 1); // Remove the link at the specified position
+    return this; // Return the chainMaker object for chaining
   },
+
+  // Reverses the order of the chain
   reverseChain() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+    this.chain.reverse();
+    return this; // Return the chainMaker object for chaining
   },
+
+  // Returns the final chain as a string and resets it
   finishChain() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+    const result = this.chain.join('~~');
+    this.chain = []; // Reset the chain for the next operations
+    return result; // Return the string representation of the chain
   }
 };
 

@@ -20,13 +20,66 @@ const { NotImplementedError } = require('../extensions/index.js');
  * 
  */
 class VigenereCipheringMachine {
-  encrypt() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+  constructor(isDirect = true) {
+    this.isDirect = isDirect;
   }
-  decrypt() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+
+  encrypt(message, key) {
+    if (!message || !key) {
+      throw new Error("Incorrect arguments!");
+    }
+
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    let result = '';
+    let keyIndex = 0;
+
+    message = message.toUpperCase();
+    key = key.toUpperCase();
+
+    for (let i = 0; i < message.length; i++) {
+      const messageChar = message[i];
+
+      if (alphabet.includes(messageChar)) {
+        const messageCharIndex = alphabet.indexOf(messageChar);
+        const keyCharIndex = alphabet.indexOf(key[keyIndex % key.length]);
+        const encryptedCharIndex = (messageCharIndex + keyCharIndex) % 26;
+        result += alphabet[encryptedCharIndex];
+        keyIndex++;
+      } else {
+        result += messageChar; // Keep non-alphabetic characters as is
+      }
+    }
+
+    return this.isDirect ? result : result.split('').reverse().join('');
+  }
+
+  decrypt(encryptedMessage, key) {
+    if (!encryptedMessage || !key) {
+      throw new Error("Incorrect arguments!");
+    }
+
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    let result = '';
+    let keyIndex = 0;
+
+    encryptedMessage = encryptedMessage.toUpperCase();
+    key = key.toUpperCase();
+
+    for (let i = 0; i < encryptedMessage.length; i++) {
+      const encryptedChar = encryptedMessage[i];
+
+      if (alphabet.includes(encryptedChar)) {
+        const encryptedCharIndex = alphabet.indexOf(encryptedChar);
+        const keyCharIndex = alphabet.indexOf(key[keyIndex % key.length]);
+        const decryptedCharIndex = (encryptedCharIndex - keyCharIndex + 26) % 26;
+        result += alphabet[decryptedCharIndex];
+        keyIndex++;
+      } else {
+        result += encryptedChar; // Keep non-alphabetic characters as is
+      }
+    }
+
+    return this.isDirect ? result : result.split('').reverse().join('');
   }
 }
 
